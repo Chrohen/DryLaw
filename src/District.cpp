@@ -1,101 +1,76 @@
 ﻿#include "District.hpp"
-#include "nlohmann/json.hpp"
-#include <fstream>
+#include "Player.hpp"
 #include <iostream>
-#include <vector>
-#include <memory>
-#include "GameClock.hpp"
+#include <fstream>
+#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
-District::District(const std::string& name) {
-	this->name = name;
-	
-	std::ifstream ifs("./src/districts.json");
-	if (!ifs.is_open()) {
-		return;
-	}
+District::District(const std::string& districtName) : name(districtName) {
+    std::ifstream ifs("src/districts.json");;
 
-	json j;
-	ifs >> j;
-	
+    if (!ifs.is_open()) {
+        std::cerr << "[District] Cannot open districts.json\n";
+        return;
+    }
 
-	for (const auto& entry : j) {
-		if (entry.value("name", "") == name) {
-			policeInfluence = entry.value("policeInfluence", 0);
-			mafiaInfluence = entry.value("mafiaInfluence", 0);
+    json j;
+    ifs >> j;
 
-			if (entry.contains("businesses") && entry["businesses"].is_array()) {
-				for (const auto& list : entry["businesses"]) {
-					InitBusiness(list.get<std::string>());
-				}
-			}
-			return;
-		}
-	}
+    for (const auto& entry : j) {
+        if (entry["name"] == name) {
+            policeInfluence = entry.value("policeInfluence", 0);
+            mafiaInfluence = entry.value("mafiaInfluence", 0);
+
+            if (entry.contains("businesses") && entry["businesses"].is_array()) {
+                for (const auto& bizName : entry["businesses"]) {
+                    businesses.push_back(std::make_shared<Business>(bizName.get<std::string>()));
+                }
+            }
+            return;
+        }
+    }
+
+    std::cerr << "[District] District with '" << name << "' not found in JSON\n";
+}
+
+const std::string& District::GetName() const {
+    return name;
 }
 
 void District::VisitDistrict(Player& player) {
-	while (true) {
-		int idx = ShowBusinessList();
-		if (idx < 0) break;
-
-		businesses[idx]->interact(player);
-	}
+    std::cout << "\n=== District: " << name << " ===\n";
+    ShowBusinesses();
+    std::cout << "[0] Back\nChoose business: ";
+    int choice;
+    std::cin >> choice;
+    if (choice > 0 && choice <= (int)businesses.size()) {
+        InteractWithBusiness(player, choice - 1);
+    }
 }
 
-void District::InitBusiness(const std::string& name) {
-	std::unique_ptr<Business> b = std::make_unique<Business>(name);
-	businesses.push_back(std::move(b));
+void District::ShowBusinesses() const {
+    int index = 1;
+    for (const auto& b : businesses) {
+        std::cout << "[" << index++ << "] " << b->GetName() << "\n";
+    }
 }
 
-std::string District::GetName() {
-	return name;
-}
+void District::InteractWithBusiness(Player& player, int index) {
+    if (index < 0 || index >= (int)businesses.size()) return;
+    auto& biz = businesses[index];
+    biz->ShowInfo();
 
-int District::GetInfluence(std::string faction) {
-	if (faction == "Mafia") {
-		return mafiaInfluence;
-	}
-	else if(faction == "Police")
-	{
-		return policeInfluence;
-	}
-	else {
-		return 0;
-	}
-}
+    std::cout << "\n[1] Buy\n[2] Back\nChoose: ";
+    int act;
+    std::cin >> act;
 
-const std::vector<std::unique_ptr<Business>>& District::GetBusinesses() const {
-	return businesses;
-}
-
-int District::ShowBusinessList() const {
-	std::cout << "\n=== " << GameClock::toString() << " === " << name << " ===\n";
-	if (businesses.empty()) {
-		std::cout << "(No businesses in this district)\n";
-		return -1;
-	}
-	for (size_t i = 0; i < businesses.size(); ++i) {
-		std::cout << "[" << i + 1 << "] " << businesses[i]->GetName() << "\n";
-	}
-	std::cout << "[" << businesses.size() + 1 << "] Back\n";
-	std::cout << "Choose : ";
-
-	int choice;
-	if (!(std::cin >> choice)) {
-		std::cin.clear();
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		return -1;
-	}
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-	if (choice < 1 || choice > static_cast<int>(businesses.size()) + 1) {
-		std::cout << "Wrong choice.\n";
-		return -1;
-	}
-	if (choice == static_cast<int>(businesses.size()) + 1) {
-		return -1;
-	}
-	return choice - 1;
+    if (act == 1 && player.GetCleanMoney() >= biz->GetPrice()) {
+        player.AddBusiness(biz);
+        player.AddCleanMoney(-biz->GetPrice());
+        std::cout << "[INFO] Business baught!\n";
+    }
+    else if (act == 1) {
+        std::cout << "[INFO] Not enough money.\n";
+    }
 }

@@ -1,14 +1,14 @@
-﻿#ifndef MISSION
-#define MISSION
+﻿#ifndef MISSION_HPP
+#define MISSION_HPP
 
 #include <string>
 #include <map>
 #include <nlohmann/json.hpp>
-#include "Player.hpp" 
+class Player;
 
 class Mission {
 public:
-    explicit Mission(const nlohmann::json& j);
+    Mission(const nlohmann::json& j);
 
     const std::string& GetName() const;
     bool IsLegal() const;
@@ -17,13 +17,10 @@ public:
     int GetTimeCost() const;
     int GetReward() const;
 
-    // Теперь возвращает map фракция→дельта
-    const std::map<std::string, int>& GetDelta() const;
-
-    bool Attempt(int skillValue) const;
-    bool IsAvailable(const std::map<std::string, int>& playerRelations) const;
+    bool Attempt(int playerStat) const;
     void Describe() const;
-    void Execute(Player& player);
+    bool IsAvailable(const std::map<std::string, int>& playerRelations) const;
+    void Execute(Player& player) const;
 
 private:
     std::string name;
@@ -32,9 +29,8 @@ private:
     int difficulty;
     int timeCost;
     int reward;
-
-    std::map<std::string, int> delta;         // Mafia, Police, Politics, Citizens
-    std::map<std::string, int> requirements;  // требования по отношениям
+    std::map<std::string, int> delta;
+    std::map<std::string, int> requirements;
 };
 
-#endif // !MISSION
+#endif

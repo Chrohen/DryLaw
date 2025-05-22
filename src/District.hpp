@@ -1,30 +1,26 @@
-#ifndef DISTRICT
-#define DISTRICT
+#ifndef DISTRICT_HPP
+#define DISTRICT_HPP
 
 #include <string>
 #include <vector>
 #include <memory>
 #include "Business.hpp"
+class Player;
 
 class District {
 public:
     District(const std::string& name);
-
-	std::string GetName();
-	int GetInfluence(std::string faction);
-	const std::vector<std::unique_ptr<Business>>& GetBusinesses() const;
-	void VisitDistrict(Player& player);
+    void VisitDistrict(Player& player);
+    const std::string& GetName() const;
 
 private:
-	std::string name;
-    int policeInfluence = 0;
-    int mafiaInfluence = 0;
-	std::vector<std::unique_ptr<Business>> businesses;
+    void ShowBusinesses() const;
+    void InteractWithBusiness(Player& player, int index);
 
-	void InitBusiness(const std::string& name);
-
-    int ShowBusinessList() const;
-	int showBusinessActions() const;
+    std::string name;
+    int policeInfluence;
+    int mafiaInfluence;
+    std::vector<std::shared_ptr<Business>> businesses;
 };
 
-#endif DISTRICT
+#endif

@@ -1,39 +1,30 @@
-#ifndef BUSINESS
-#define BUSINESS
-
+#ifndef BUSINESS_HPP
+#define BUSINESS_HPP
 #include <string>
-
+#include <memory>
+#include <nlohmann/json.hpp>
 class Player;
 
 class Business {
 public:
-    // Конструктор ищет бизнес по имени в businesses.json
-    explicit Business(const std::string& name);
+    Business(const std::string& name);
+    void ShowInfo() const;
+    void GiveProfit(Player& owner) const;
 
-    // Геттеры
-    const std::string& GetName() const;
-    bool IsLegal() const;
-    int GetCleanIncome() const;
-    int GetDirtyIncome() const;
-    int GetConversion() const;
-
-    // Расчёт прибыли (чистые, грязные)
-    std::pair<int, int> CalculateIncome() const;
-    void ConvertDirtyMoney(Player& player) const;
-
-    void interact(Player& player);
+    const std::string& GetName() const { return name; }
+    bool IsLegal() const { return isLegal; }
+    int GetPrice() const { return price; }
 
 private:
-    std::string name;
-    bool legal = true;
-    int cleanIncome = 0;
-    int dirtyIncome = 0;
-    int dirtyToCleanConversion = 0;
+    void LoadFromJson();
 
-    static std::string factionToString();
-    void describe() const;
-    int  chooseAction() const;
-    void handleAction(int action, Player& player) const;
+    std::string name;
+    bool isLegal;
+    int cleanIncome;
+    int dirtyIncome;
+    int dirtyToCleanConversion;
+    int price;
+    std::string owner;
 };
 
-#endif // !BUISNESS
+#endif

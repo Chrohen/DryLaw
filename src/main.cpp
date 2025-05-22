@@ -12,6 +12,6 @@
 int main() {
 
     GameManager gm;
-    gm.run();
+    gm.Run();
     return 0;
 }
