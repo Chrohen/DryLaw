@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Downtown",
+    "policeInfluence": 20,
+    "mafiaInfluence": 10,
+    "businesses": [
+      "Cafe",
+      "Underground bar"
+    ]
+  },
+  {
+    "name": "Bruklin",
+    "policeInfluence": 15,
+    "mafiaInfluence": 25,
+    "businesses": [
+      "Dress shop",
+      "Lab"
+    ]
+  },
+  {
+    "name": "Industrial",
+    "policeInfluence": 10,
+    "mafiaInfluence": 30,
+    "businesses": [
+      "Factory",
+      "Casino"
+    ]
+  }
+]

@@ -1,0 +1,35 @@
+[
+    {
+        "name": "Cafe",
+        "isLegal": true,
+        "cleanIncome": 100,
+        "dirtyIncome": 0,
+        "dirtyToCleanConversion": 20
+    },
+    {
+        "name": "Underground bar",
+        "isLegal": false, 
+        "cleanIncome": 0,
+        "dirtyIncome": 500,
+        "dirtyToCleanConversion": 0
+    },
+    {
+        "name": "Dress shop",
+        "isLegal": true,
+        "cleanIncome": 1000,
+        "dirtyIncome": 0,
+        "dirtyToCleanConversion": 0
+    },
+    {
+        "name": "Lab",
+        "isLegal": false,
+        "cleanIncome": 0,
+        "dirtyIncome": 250,
+        "dirtyToCleanConversion": 0
+    },
+    {
+        "name": "Factory",
+        "isLegal":true,
+        ""
+    }
+]

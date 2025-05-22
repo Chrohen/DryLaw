@@ -1,0 +1,25 @@
+{
+  "hp": 80,
+  "maxHp": 100,
+  "cleanMoney": 500,
+  "dirtyMoney": 100,
+  "stats": {
+    "strength": 2,
+    "intelligence": 2,
+    "dexterity": 2,
+    "charisma": 2
+  },
+  "maxStats": {
+    "strength": 10,
+    "intelligence": 10,
+    "dexterity": 10,
+    "charisma": 10
+  },
+  "relations": {
+    "mafia": 0,
+    "police": 0,
+    "politics": 0,
+    "citizens": 0
+  },
+  "maxRelationAbs": 100
+}

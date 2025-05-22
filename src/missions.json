@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Steal car",
+    "legal": false,
+    "skillCheck": "dextrity",
+    "difficulty": 1,
+    "timeCost": 2,
+    "reward": 50,
+    "delta": {
+      "mafia": 1,
+      "police": -3,
+      "politics": -1,
+      "citizens": -2
+    },
+    "requirements": {
+    }
+  },
+  {
+    "name": "Work in cafe",
+    "legal": true,
+    "skillCheck": "",
+    "difficulty": 0,
+    "timeCost": 4,
+    "reward": 20,
+    "delta": {
+      "mafia": 0,
+      "police": 0,
+      "politics": 0,
+      "citizens": 2
+    },
+    "requirements": {
+      "mafia": 0,
+      "police": 0,
+      "politics": 0,
+      "citizens": 0
+    }
+  }
+]
